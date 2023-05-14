@@ -7,6 +7,7 @@
     <groupId>com.example</groupId>
     <artifactId>simple_crud</artifactId>
     <version>1.0</version>
+    <name>simple_crud</name>
     <packaging>war</packaging>
 
     <properties>
@@ -22,6 +23,11 @@
             <artifactId>jakarta.servlet-api</artifactId>
             <version>5.0.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
