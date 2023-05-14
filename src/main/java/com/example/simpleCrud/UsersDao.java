@@ -1,6 +1,8 @@
 package com.example.simpleCrud;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UsersDao {
     private static String jdbcURL = "jdbc:mysql://localhost:3306/simple_crud_jsp_servlet_and_mysql";
@@ -43,4 +45,29 @@ public class UsersDao {
         }
         return status;
     }
+
+    public static List<User> getAllUsers() {
+        List<User> list = new ArrayList<>();
+
+        try {
+            Connection con = UsersDao.getConnection();
+            PreparedStatement ps = con.prepareStatement(
+                    "select * from users");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt(1));
+                user.setFio(rs.getString(2));
+                user.setPhoneNumber(rs.getString(3));
+                user.setTechnologies(rs.getString(4));
+                list.add(user);
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
 }
