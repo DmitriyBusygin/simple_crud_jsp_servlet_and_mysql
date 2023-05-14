@@ -6,7 +6,7 @@ CREATE TABLE simple_crud_jsp_servlet_and_mysql.user
 (
     id           INT NOT NULL AUTO_INCREMENT,
     fio          VARCHAR(35) NULL,
-    phoneNumber  INT NULL,
+    phoneNumber  VARCHAR(15) NULL,
     technologies VARCHAR(50) NULL,
     PRIMARY KEY (id)
 );

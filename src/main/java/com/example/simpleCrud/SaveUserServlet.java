@@ -1,4 +1,4 @@
-package com.example.simple_crud;
+package com.example.simpleCrud;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,7 +18,7 @@ public class SaveUserServlet extends HttpServlet {
         // Getting all the request parameters from
         // index.html
         String fio = request.getParameter("fio");
-        int phoneNumber = Integer.parseInt(request.getParameter("phoneNumber"));
+        String phoneNumber = request.getParameter("phoneNumber");
         String technologies = request.getParameter("technologies");
 
         // User object is created
@@ -38,7 +38,7 @@ public class SaveUserServlet extends HttpServlet {
         // This is possible when the record is saved
         // successfully
         if (status > 0) {
-            out.print("< p > Добавление прошло успешно! </p >");
+            out.print("<p> Добавление прошло успешно! </p>");
             request.getRequestDispatcher("index.html")
                     .include(request, response);
         } else {

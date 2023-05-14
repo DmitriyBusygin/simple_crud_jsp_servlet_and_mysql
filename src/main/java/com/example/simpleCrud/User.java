@@ -1,9 +1,8 @@
-package com.example.simple_crud;
+package com.example.simpleCrud;
 
 public class User {
     private int id;
-    private int phoneNumber;
-    private String fio, technologies;
+    private String fio, phoneNumber, technologies;
 
     public int getId() {
         return id;
@@ -13,11 +12,11 @@ public class User {
         this.id = id;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

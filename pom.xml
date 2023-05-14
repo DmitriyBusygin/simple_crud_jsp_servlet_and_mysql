@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>simple_crud</artifactId>
+    <artifactId>simpleCrud</artifactId>
     <version>1.0</version>
-    <name>simple_crud</name>
+    <name>simpleCrud</name>
     <packaging>war</packaging>
 
     <properties>
