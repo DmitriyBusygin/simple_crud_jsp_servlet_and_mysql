@@ -14,22 +14,17 @@ public class UsersDao {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-        } catch (SQLException e) {
-            System.out.println("Message.. " + e.getMessage());
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             System.out.println("Message.. " + e.getMessage());
             e.printStackTrace();
         }
         return con;
     }
 
-    // Rest of the methods like Save,
-    // Update, Delete etc., should come here
+    // Рестовые сервисы по Create, Read, Update, Delete
     public static int save(User user) {
         int status = 0;
-        try {
-            Connection con = UsersDao.getConnection();
+        try (Connection con = UsersDao.getConnection()) {
             PreparedStatement ps = con.prepareStatement(
                     "insert into users(fio, phoneNumber, technologies) values (?,?,?)");
             ps.setString(1, user.getFio());
@@ -37,8 +32,6 @@ public class UsersDao {
             ps.setString(3, user.getTechnologies());
 
             status = ps.executeUpdate();
-
-            con.close();
         } catch (Exception ex) {
             System.out.println("Message.." + ex.getMessage());
             ex.printStackTrace();
@@ -49,8 +42,7 @@ public class UsersDao {
     public static List<User> getAllUsers() {
         List<User> list = new ArrayList<>();
 
-        try {
-            Connection con = UsersDao.getConnection();
+        try (Connection con = UsersDao.getConnection()) {
             PreparedStatement ps = con.prepareStatement(
                     "select * from users");
             ResultSet rs = ps.executeQuery();
@@ -62,12 +54,25 @@ public class UsersDao {
                 user.setTechnologies(rs.getString(4));
                 list.add(user);
             }
-            con.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return list;
+    }
+
+    public static int delete(int id) {
+        int status = 0;
+        try (Connection con = UsersDao.getConnection()) {
+            PreparedStatement ps = con.prepareStatement(
+                    "DELETE from users WHERE id=?");
+            ps.setInt(1, id);
+            status = ps.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println("Message.." + ex.getMessage());
+            ex.printStackTrace();
+        }
+        return status;
     }
 
 }
