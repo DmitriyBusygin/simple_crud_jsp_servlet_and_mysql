@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UsersDao {
-    private static String jdbcURL = "jdbc:mysql://localhost:3306/simple_crud_jsp_servlet_and_mysql";
-    private static String jdbcUsername = "root";
-    private static String jdbcPassword = "Admin12345";
+    private static final String jdbcURL = "jdbc:mysql://localhost:3306/simple_crud_jsp_servlet_and_mysql";
+    private static final String jdbcUsername = "root";
+    private static final String jdbcPassword = "Admin12345";
 
     public static Connection getConnection() {
         Connection con = null;
@@ -61,18 +61,15 @@ public class UsersDao {
         return list;
     }
 
-    public static int delete(int id) {
-        int status = 0;
+    public static void delete(int id) {
         try (Connection con = UsersDao.getConnection()) {
             PreparedStatement ps = con.prepareStatement(
                     "DELETE from users WHERE id=?");
             ps.setInt(1, id);
-            status = ps.executeUpdate();
+            ps.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Message.." + ex.getMessage());
             ex.printStackTrace();
         }
-        return status;
     }
-
 }
