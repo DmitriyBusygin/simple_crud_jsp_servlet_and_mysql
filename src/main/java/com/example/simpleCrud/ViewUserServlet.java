@@ -14,7 +14,7 @@ import java.util.List;
 public class ViewUserServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
         PrintWriter printWriter = response.getWriter();
         printWriter.println("<a href='index.html'>Добавить нового кандидата</a>");
