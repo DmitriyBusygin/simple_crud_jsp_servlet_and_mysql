@@ -72,4 +72,45 @@ public class UsersDao {
             ex.printStackTrace();
         }
     }
+
+    public static User getUsersById(int id) {
+        User user = new User();
+        try (Connection con = UsersDao.getConnection()) {
+            PreparedStatement ps = con.prepareStatement(
+                    "SELECT * from users WHERE id=?");
+            ps.setInt(1, id);
+
+            ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                user.setId(resultSet.getInt(1));
+                user.setFio(resultSet.getString(2));
+                user.setPhoneNumber(resultSet.getString(3));
+                user.setTechnologies(resultSet.getString(4));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return user;
+    }
+
+    public static int update(User user) {
+        int status = 0;
+        try (Connection con = UsersDao.getConnection()) {
+            PreparedStatement ps = con.prepareStatement(
+                    "UPDATE users " +
+                            "SET fio = ?," +
+                            "phoneNumber = ?," +
+                            "technologies = ?" +
+                            "WHERE id = ?");
+            ps.setString(1, user.getFio());
+            ps.setString(2, user.getPhoneNumber());
+            ps.setString(3, user.getTechnologies());
+            ps.setInt(4, user.getId());
+
+            status = ps.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return status;
+    }
 }
