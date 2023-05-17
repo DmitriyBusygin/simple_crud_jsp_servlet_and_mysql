@@ -11,60 +11,62 @@ public class UsersDao {
     // Рестовые сервисы по Create, Read, Update, Delete
     public static int save(User user) {
         int status = 0;
-        try (Connection con = ConnectionManager.getConnection()) {
-            PreparedStatement ps = con.prepareStatement(
-                    "insert into users(fio, phoneNumber, technologies) values (?,?,?)");
+        String sql = """
+                INSERT INTO users(fio, phoneNumber, technologies)
+                VALUE (?, ?, ?)
+                """;
+
+        try (Connection con = ConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, user.getFio());
             ps.setString(2, user.getPhoneNumber());
             ps.setString(3, user.getTechnologies());
 
             status = ps.executeUpdate();
-        } catch (Exception ex) {
-            System.out.println("Message.." + ex.getMessage());
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return status;
     }
 
     public static List<User> getAllUsers() {
-        List<User> list = new ArrayList<>();
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM users";
 
-        try (Connection con = ConnectionManager.getConnection()) {
-            PreparedStatement ps = con.prepareStatement(
-                    "select * from users");
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 User user = new User();
-                user.setId(rs.getInt(1));
-                user.setFio(rs.getString(2));
-                user.setPhoneNumber(rs.getString(3));
-                user.setTechnologies(rs.getString(4));
-                list.add(user);
+                user.setId(rs.getInt("id"));
+                user.setFio(rs.getString("fio"));
+                user.setPhoneNumber(rs.getString("phoneNumber"));
+                user.setTechnologies(rs.getString("technologies"));
+                users.add(user);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-
-        return list;
+        return users;
     }
 
     public static void delete(int id) {
-        try (Connection con = ConnectionManager.getConnection()) {
-            PreparedStatement ps = con.prepareStatement(
-                    "DELETE from users WHERE id=?");
+        String sql = "DELETE FROM users WHERE id = ?";
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
+
             ps.executeUpdate();
-        } catch (Exception ex) {
-            System.out.println("Message.." + ex.getMessage());
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
     public static User getUsersById(int id) {
         User user = new User();
-        try (Connection con = ConnectionManager.getConnection()) {
-            PreparedStatement ps = con.prepareStatement(
-                    "SELECT * from users WHERE id=?");
+        String sql = "SELECT * from users WHERE id = ?";
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
 
             ResultSet resultSet = ps.executeQuery();
@@ -74,29 +76,32 @@ public class UsersDao {
                 user.setPhoneNumber(resultSet.getString(3));
                 user.setTechnologies(resultSet.getString(4));
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return user;
     }
 
     public static int update(User user) {
         int status = 0;
-        try (Connection con = ConnectionManager.getConnection()) {
-            PreparedStatement ps = con.prepareStatement(
-                    "UPDATE users " +
-                            "SET fio = ?," +
-                            "phoneNumber = ?," +
-                            "technologies = ?" +
-                            "WHERE id = ?");
+        String sql = """
+                UPDATE users
+                SET fio = ?,
+                phoneNumber = ?,
+                technologies = ?
+                WHERE id = ?
+                """;
+
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, user.getFio());
             ps.setString(2, user.getPhoneNumber());
             ps.setString(3, user.getTechnologies());
             ps.setInt(4, user.getId());
 
             status = ps.executeUpdate();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return status;
     }
