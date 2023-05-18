@@ -1,5 +1,6 @@
 package com.example.simpleCrud;
 
+import com.example.entity.User;
 import com.example.util.ConnectionManager;
 
 import java.sql.*;
@@ -12,7 +13,7 @@ public class UsersDao {
     public static int save(User user) {
         int status = 0;
         String sql = """
-                INSERT INTO users(fio, phoneNumber, technologies)
+                INSERT INTO user(fio, phoneNumber, technologies)
                 VALUE (?, ?, ?)
                 """;
 
@@ -31,7 +32,7 @@ public class UsersDao {
 
     public static List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM users";
+        String sql = "SELECT * FROM user";
 
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -51,7 +52,7 @@ public class UsersDao {
     }
 
     public static void delete(int id) {
-        String sql = "DELETE FROM users WHERE id = ?";
+        String sql = "DELETE FROM user WHERE id = ?";
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -64,7 +65,7 @@ public class UsersDao {
 
     public static User getUsersById(int id) {
         User user = new User();
-        String sql = "SELECT * from users WHERE id = ?";
+        String sql = "SELECT * from user WHERE id = ?";
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -85,7 +86,7 @@ public class UsersDao {
     public static int update(User user) {
         int status = 0;
         String sql = """
-                UPDATE users
+                UPDATE user
                 SET fio = ?,
                 phoneNumber = ?,
                 technologies = ?

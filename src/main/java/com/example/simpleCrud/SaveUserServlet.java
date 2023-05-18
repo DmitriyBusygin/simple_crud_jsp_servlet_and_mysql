@@ -3,6 +3,7 @@ package com.example.simpleCrud;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import com.example.entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

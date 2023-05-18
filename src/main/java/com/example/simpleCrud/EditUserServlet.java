@@ -1,5 +1,6 @@
 package com.example.simpleCrud;
 
+import com.example.entity.User;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
