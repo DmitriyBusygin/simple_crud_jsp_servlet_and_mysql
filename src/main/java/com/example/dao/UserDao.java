@@ -71,12 +71,7 @@ public class UserDao {
             User user = null;
             var resultSet = prepareStatement.executeQuery();
             if (resultSet.next()) {
-                user = new User(
-                        resultSet.getInt("id"),
-                        resultSet.getString("fio"),
-                        resultSet.getString("phoneNumber"),
-                        resultSet.getString("technologies")
-                );
+                user = buildUser(resultSet);
             }
             return user;
         } catch (SQLException e) {
@@ -87,16 +82,11 @@ public class UserDao {
     public List<User> findAll() {
         try (var connection = ConnectionManager.getConnection();
              var prepareStatement = connection.prepareStatement(FIND_ALL_SQL)) {
-            ResultSet rs = prepareStatement.executeQuery();
+            ResultSet resultSet = prepareStatement.executeQuery();
 
             List<User> users = new ArrayList<>();
-            while (rs.next()) {
-                User user = new User();
-                user.setId(rs.getInt("id"));
-                user.setFio(rs.getString("fio"));
-                user.setPhoneNumber(rs.getString("phoneNumber"));
-                user.setTechnologies(rs.getString("technologies"));
-                users.add(user);
+            while (resultSet.next()) {
+                users.add(buildUser(resultSet));
             }
             return users;
         } catch (SQLException e) {
@@ -127,5 +117,14 @@ public class UserDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    private User buildUser(ResultSet resultSet) throws SQLException {
+        return new User(
+                resultSet.getInt("id"),
+                resultSet.getString("fio"),
+                resultSet.getString("phoneNumber"),
+                resultSet.getString("technologies")
+        );
     }
 }
