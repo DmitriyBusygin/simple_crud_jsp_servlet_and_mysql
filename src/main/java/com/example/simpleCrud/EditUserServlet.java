@@ -1,5 +1,6 @@
 package com.example.simpleCrud;
 
+import com.example.dao.UserDao;
 import com.example.entity.User;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,7 +23,7 @@ public class EditUserServlet extends HttpServlet {
         // Получить индендификатор из запроса
         // Получить данные из БД по id
         int id = Integer.parseInt(request.getParameter("id"));
-        User user = UsersDao.getUsersById(id);
+        User user = UserDao.getInstance().findById(id);
 
         out.print("<form action='EditServlet' method='post'>");
         out.print("<table>");
@@ -55,7 +56,7 @@ public class EditUserServlet extends HttpServlet {
         user.setTechnologies(technologies);
 
         // Вызвать метод сохранения данных
-        int status = UsersDao.update(user);
+        int status = UserDao.getInstance().update(user);
         if (status > 0) {
             response.sendRedirect("ViewServlet");
         } else {

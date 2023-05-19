@@ -1,5 +1,6 @@
 package com.example.simpleCrud;
 
+import com.example.dao.UserDao;
 import com.example.entity.User;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,7 +21,7 @@ public class ViewUserServlet extends HttpServlet {
         printWriter.println("<a href='index.html'>Добавить нового кандидата</a>");
         printWriter.println("<h1>Список кандидатов</h1>");
 
-        List<User> list = UsersDao.getAllUsers();
+        List<User> list = UserDao.getInstance().findAll();
 
         printWriter.print("<table border='1' bordercolor='#009879' width='50%'");
         printWriter.print("<tr><th>Id</th><th>ФИО</th><th>Номер телефона</th><th>Список технологий</th><th>Редактировать</th><th>Удалить</th></tr>");

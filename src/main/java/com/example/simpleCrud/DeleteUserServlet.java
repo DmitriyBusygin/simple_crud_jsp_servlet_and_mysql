@@ -1,5 +1,6 @@
 package com.example.simpleCrud;
 
+import com.example.dao.UserDao;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +14,7 @@ public class DeleteUserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int id = Integer.parseInt(request.getParameter("id"));
-        UsersDao.delete(id);
+        UserDao.getInstance().delete(id);
         response.sendRedirect("ViewServlet");
     }
 }

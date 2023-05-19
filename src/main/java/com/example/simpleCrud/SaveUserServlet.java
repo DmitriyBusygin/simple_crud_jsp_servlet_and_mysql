@@ -3,6 +3,7 @@ package com.example.simpleCrud;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import com.example.dao.UserDao;
 import com.example.entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -31,9 +32,8 @@ public class SaveUserServlet extends HttpServlet {
         user.setTechnologies(technologies);
 
         // Сохранение кандидата в БД
-        int status = UsersDao.save(user);
-
-        if (status > 0) {
+        user = UserDao.getInstance().save(user);
+        if (user.getId() >= 0) {
             out.print("<p> Добавление прошло успешно! </p>");
             request.getRequestDispatcher("index.html").include(request, response);
         } else {
