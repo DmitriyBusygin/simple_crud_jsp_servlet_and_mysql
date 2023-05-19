@@ -1,5 +1,6 @@
 package com.example.dao;
 
+import com.example.dto.UserFilter;
 import com.example.entity.User;
 import com.example.exeption.DaoException;
 import com.example.util.ConnectionManager;
@@ -7,6 +8,8 @@ import com.example.util.ConnectionManager;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.stream.Collectors.joining;
 
 public class UserDao {
 
@@ -82,6 +85,50 @@ public class UserDao {
     public List<User> findAll() {
         try (var connection = ConnectionManager.getConnection();
              var prepareStatement = connection.prepareStatement(FIND_ALL_SQL)) {
+            ResultSet resultSet = prepareStatement.executeQuery();
+
+            List<User> users = new ArrayList<>();
+            while (resultSet.next()) {
+                users.add(buildUser(resultSet));
+            }
+            return users;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    public List<User> findAll(UserFilter filter) {
+        List<Object> parameters = new ArrayList<>();
+        List<String> whereSql = new ArrayList<>();
+
+        if (filter.id() != 0) {
+            whereSql.add("id = ?");
+            parameters.add(filter.id());
+        }
+        if (filter.fio() != null) {
+            whereSql.add("fio LIKE ?");
+            parameters.add("%" + filter.fio() + "%");
+        }
+        if (filter.phoneNumber() != null) {
+            whereSql.add("phoneNumber LIKE ?");
+            parameters.add("%" + filter.phoneNumber() + "%");
+        }
+        if (filter.technologies() != null) {
+            whereSql.add("technologies LIKE ?");
+            parameters.add("%" + filter.technologies() + "%");
+        }
+
+        var where = whereSql.stream()
+                .collect(joining(" AND ", " WHERE ", ""));
+
+        var sql = parameters.isEmpty() ? FIND_ALL_SQL : FIND_ALL_SQL + where;
+
+        try (var connection = ConnectionManager.getConnection();
+             var prepareStatement = connection.prepareStatement(sql)) {
+            for (int i = 0; i < parameters.size(); i++) {
+                prepareStatement.setObject(i + 1, parameters.get(i));
+            }
+
             ResultSet resultSet = prepareStatement.executeQuery();
 
             List<User> users = new ArrayList<>();

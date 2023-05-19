@@ -1,6 +1,7 @@
 package com.example.simpleCrud;
 
 import com.example.dao.UserDao;
+import com.example.dto.UserFilter;
 import com.example.entity.User;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -21,10 +22,31 @@ public class ViewUserServlet extends HttpServlet {
         printWriter.println("<a href='index.html'>Добавить нового кандидата</a>");
         printWriter.println("<h1>Список кандидатов</h1>");
 
-        List<User> list = UserDao.getInstance().findAll();
+        int id ;
+        try {
+            id = Integer.parseInt(request.getParameter("idFilter"));
+        } catch (NumberFormatException e) {
+            id = 0;
+        }
+        String fio = request.getParameter("fioFilter");
+        String phoneNumber = request.getParameter("phoneNumberFilter");
+        String technologies = request.getParameter("technologiesFilter");
+        List<User> list = UserDao.getInstance().findAll(new UserFilter(id, fio, phoneNumber, technologies));
 
         printWriter.print("<table border='1' bordercolor='#009879' width='50%'");
         printWriter.print("<tr><th>Id</th><th>ФИО</th><th>Номер телефона</th><th>Список технологий</th><th>Редактировать</th><th>Удалить</th></tr>");
+        printWriter.print("""
+                <tr>
+                    <form action='ViewServlet' method='get'>
+                    <td><input type='text' name='idFilter' value=''/></td>
+                    <td><input type='text' name='fioFilter' value=''/></td>
+                    <td><input type='text' name='phoneNumberFilter' value=''/></td>
+                    <td><input type='text' name='technologiesFilter' value=''/></td>
+                    <td><input type='submit' value='Применить фильтр'/></td>
+                    </form>
+                </tr>
+                """);
+
         for (User user : list) {
             // Каждая строчка идендифицируется с помощью ее идендификатора
             // следовательно, при нажатии "Редактировать" отправлятеся запрос с id строки
